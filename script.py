@@ -39,7 +39,7 @@ def main():
 
     generate_docker_compose(db, node_count)
     generate_workload(workload_read_ratio, workload_write_ratio)
-    run_docker_compose()
+    run_docker_compose(db)
     return 0
 
 def generate_docker_compose(db: str, node_count: int):
@@ -89,11 +89,17 @@ updateproportion={write_ratio}
     with open(f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-{read_ratio}-{write_ratio}", "w") as f:
         f.write(workloadData)
 
-def run_docker_compose():
-    stop_docker_containers()
+def run_docker_compose(db: str):
+    if db == "redis":
+        run_redis_docker_compose()
+    elif db == "mongodb":
+        run_mongodb_docker_compose()
 
-def stop_docker_containers():
-    subprocess.run(["docker", "stop", "$(docker ps -aq)"])
+def run_redis_docker_compose():
+    subprocess.run(["docker-compose", "-f", f"{REDIS_PATH}/docker-compose.yml", "up", "-d"])
+
+def run_mongodb_docker_compose():
+    pass
 
 if __name__ == '__main__':
     main()
