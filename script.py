@@ -96,7 +96,7 @@ def run_docker_compose(db: str):
         run_mongodb_docker_compose()
 
 def run_redis_docker_compose():
-    subprocess.run(["docker-compose", "-f", f"{REDIS_PATH}/docker-compose.yml", "up", "-d"])
+    subprocess.run(["sudo", "docker-compose", "-f", f"{REDIS_PATH}/docker-compose.yml", "up", "-d"])
 
 def run_mongodb_docker_compose():
     pass
