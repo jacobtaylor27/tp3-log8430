@@ -90,17 +90,10 @@ updateproportion={write_ratio}
         f.write(workloadData)
 
 def run_docker_compose():
-    stop_all_docker_containers()
+    stop_docker_containers()
 
-def stop_all_docker_containers():
-    try:
-        container_ids = subprocess.check_output(["docker", "ps", "-q"]).decode().split()
-    except subprocess.CalledProcessError:
-        print("No running containers found.")
-        return
-
-    for container_id in container_ids:
-        subprocess.run(["docker", "stop", container_id])
+def stop_docker_containers():
+    subprocess.run(["docker", "stop", "$(docker ps -aq)"])
 
 if __name__ == '__main__':
     main()
