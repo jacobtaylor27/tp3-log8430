@@ -1,40 +1,25 @@
-version: '2'
-services: 
-  redis-node-0:
-    image: bitnami/redis-cluster:latest
-    volumes:
-      - 'redis-node-0_data:/bitnami/redis/data'
-    environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2'
-  
-  redis-node-1:
-    image: bitnami/redis-cluster:latest
-    volumes:
-      - 'redis-node-1_data:/bitnami/redis/data'
-    environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2'
-  
-  redis-node-2:
-    image: bitnami/redis-cluster:latest
-    volumes:
-      - 'redis-node-2_data:/bitnami/redis/data'
-    depends_on:
-      - redis-node-0
-      - redis-node-1
-    environment:
-      - 'REDISCLI_AUTH=jacob'
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-      - 'REDIS_CLUSTER_REPLICAS=1'
-      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2'
-      - 'REDIS_CLUSTER_CREATOR=yes'
-  
-volumes:
-  redis-node-0_data:
-    driver: local
-  redis-node-1_data:
-    driver: local
-  redis-node-2_data:
-    driver: local
-  
+services:
+  redis-master:
+    image: redis:latest
+    container_name: redis-master
+    ports:
+      - "6379:6379"
+    networks:
+      - redis-net
+    command: redis-server --appendonly yes
+
+  redis-replica-1:
+    image: redis:latest
+    networks:
+      - redis-net
+    command: redis-server --appendonly yes --slaveof redis-master 6379
+  redis-replica-2:
+    image: redis:latest
+    networks:
+      - redis-net
+    command: redis-server --appendonly yes --slaveof redis-master 6379
+
+networks:
+  redis-net:
+    driver: bridge
+
