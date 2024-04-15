@@ -24,6 +24,7 @@ def main():
         return 1
 
     DB = sys.argv[1]
+    print(DB)
     if DB != "redis" and DB != "mongodb":
         print("Invalid db. Please use either 'redis' or 'mongodb'")
         return 1
