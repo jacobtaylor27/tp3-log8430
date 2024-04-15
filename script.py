@@ -108,7 +108,7 @@ def generate_mongodb_docker_compose():
     image: mongo:4.4
     container_name: mongo{i}
     ports:
-      - "2701{port}:27017"
+      - "{port}:27017"
     command: ["mongod", "--replSet", "rs0", "--port", "27017", "--bind_ip_all"]
     networks:
       - mongo-net
