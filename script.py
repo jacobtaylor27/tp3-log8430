@@ -99,7 +99,7 @@ def generate_mongodb_docker_compose():
     for i in range(1, NODE_COUNT):
         mongodb_yml += f"""
   mongo-slave{i}:
-    image: mongo:latest
+    image: mongo:4.4
     container_name: mongo-slave{i}
     depends_on:
       - mongo-master
