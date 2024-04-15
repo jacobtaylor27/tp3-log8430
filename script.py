@@ -16,15 +16,15 @@ DB = ""
 
 DOCKER_COMPOSE_PATH = ""
 WORKLOAD_PATH = ""
-RESULTS_PATH = ""
 
 def main():
     if len(sys.argv) < 5:
         print("Usage: python script.py <db> <node_count> <workload-read-ratio> <workload-write-ratio")
         return 1
 
+    global DB, NODE_COUNT, READ_RATIO, WRITE_RATIO
+    
     DB = sys.argv[1]
-    print(DB)
     if DB != "redis" and DB != "mongodb":
         print("Invalid db. Please use either 'redis' or 'mongodb'")
         return 1
@@ -52,12 +52,14 @@ def main():
     return 0
 
 def generate_docker_compose():
+    global DB
     if DB == "redis":
         generate_redis_docker_compose()
     elif DB == "mongodb":
         generate_mongodb_docker_compose()
 
 def generate_redis_docker_compose():
+    global DOCKER_COMPOSE_PATH
     redis_yml = None
     with open(f"{DB}/{DOCKER_COMPOSE_TEMPLATE_FILENAME}", "r") as f:
         redis_yml = f.read()
@@ -93,6 +95,7 @@ def generate_workload():
         generate_mongodb_workload()
 
 def generate_redis_workload():
+    global WORKLOAD_PATH
     workloadData = None
     with open(f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}", "r") as f:
         workloadData = f.read()
