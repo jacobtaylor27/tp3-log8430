@@ -106,7 +106,7 @@ updateproportion={WRITE_RATIO}
 redis.host=127.0.0.1
 redis.port=6379
 """
-    WORKLOAD_PATH = f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-{READ_RATIO}-{WRITE_RATIO}"
+    WORKLOAD_PATH = f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-{READ_RATIO * 100}-{WRITE_RATIO * 100}"
     with open(WORKLOAD_PATH, "w") as f:
         f.write(workloadData)
 
@@ -137,7 +137,7 @@ def ycsb_runner(command_type: str, iteration: int):
         "-P",
         WORKLOAD_PATH,
         ">",
-        f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/output-{iteration}-{command_type}-{READ_RATIO}-{WRITE_RATIO}.txt"
+        f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/output-{iteration}-{command_type}-{READ_RATIO * 100}-{WRITE_RATIO * 100}.txt"
     ])
 
 def handle_mongodb_workload():
