@@ -1,7 +1,7 @@
 services:
-  mongo-master:
+  mongo1:
     image: mongo:4.4
-    container_name: mongo-master
+    container_name: mongo1
     ports:
       - "27017:27017"
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]

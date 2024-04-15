@@ -47,7 +47,7 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
-    clean_directories()
+    # clean_directories()
     generate_docker_compose()
     generate_workload()
     run_docker_compose()
@@ -101,13 +101,13 @@ def generate_mongodb_docker_compose():
     with open(f"{DB}/{DOCKER_COMPOSE_TEMPLATE_FILENAME}", "r") as f:
         mongodb_yml = f.read()
 
-    for i in range(1, NODE_COUNT):
+    for i in range(2, NODE_COUNT + 1):
         mongodb_yml += f"""
-  mongo-slave{i}:
+  mongo{i}:
     image: mongo:4.4
-    container_name: mongo-slave{i}
+    container_name: mongo{i}
     ports:
-      - "2701{7 + i}:27017"
+      - "2701{6 + i}:27017"
     command: ["mongod", "--replSet", "rs0", "--port", "27017", "--bind_ip_all"]
     networks:
       - mongo-net
@@ -215,6 +215,14 @@ def setup_replica_set():
     repl_set_name = "rs0"
 
     client = MongoClient(mongo_uri)
+    nodes = []
+
+    for i in range(0, NODE_COUNT):
+        nodes.append({"_id": i, "host": f"mongo{i}:27017"})
+
+    result = client.admin.command("replSetInitiate", {"_id": repl_set_name, "members": nodes})
+    print(result)
+    print("Replica set initiated")
 
 def handle_mongodb_workload():
     pass
