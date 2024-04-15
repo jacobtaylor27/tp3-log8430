@@ -102,7 +102,7 @@ def generate_mongodb_docker_compose():
     for i in range(2, NODE_COUNT + 1):
         port = 27016 + i
         if port > 27019:
-            port = 27020
+            port = 27021
         mongodb_yml += f"""
   mongo{i}:
     image: mongo:4.4
