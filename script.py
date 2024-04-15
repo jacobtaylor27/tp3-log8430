@@ -103,7 +103,7 @@ def generate_mongodb_docker_compose():
     container_name: mongo-slave{i}
     ports:
       - "2701{7 + i}:27017"
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    command: ["mongod", "--replSet", "rs0", "--port", "27017", "--bind_ip_all"]
     networks:
       - mongo-net
 """
