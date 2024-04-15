@@ -149,7 +149,7 @@ def generate_mongodb_workload():
     workloadData += f"""
 readproportion={READ_RATIO}
 updateproportion={WRITE_RATIO}
-mongodb.url=mongodb://localhost:27017/ycsb?w=2&replicaSet=mongo-set
+mongodb.url=mongodb://localhost:27017/ycsb?w=0
 """
     WORKLOAD_PATH = f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}"
     with open(WORKLOAD_PATH, "w") as f:
