@@ -100,12 +100,15 @@ def generate_mongodb_docker_compose():
         mongodb_yml = f.read()
 
     for i in range(2, NODE_COUNT + 1):
+        port = 27016 + i
+        if port > 27019:
+            port = 27020
         mongodb_yml += f"""
   mongo{i}:
     image: mongo:4.4
     container_name: mongo{i}
     ports:
-      - "2701{6 + i}:27017"
+      - "2701{port}:27017"
     command: ["mongod", "--replSet", "rs0", "--port", "27017", "--bind_ip_all"]
     networks:
       - mongo-net
