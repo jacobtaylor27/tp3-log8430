@@ -49,8 +49,8 @@ def main():
     clean_directories()
     generate_docker_compose()
     generate_workload()
-    run_docker_compose()
-    handle_workload()
+    # run_docker_compose()
+    # handle_workload()
 
     return 0
 
@@ -91,9 +91,30 @@ networks:
         f.write(redis_yml)
     
 def generate_mongodb_docker_compose():
+    global DOCKER_COMPOSE_PATH
+    mongodb_yml = None
     with open(f"{DB}/{DOCKER_COMPOSE_TEMPLATE_FILENAME}", "r") as f:
-        data = f.read()
-    pass
+        mongodb_yml = f.read()
+
+    for i in range(1, NODE_COUNT):
+        mongodb_yml += f"""
+  mongo-slave{i}:
+    image: mongo:latest
+    container_name: mongo-slave{1}
+    depends_on:
+      - mongo-master
+    command: mongod --replSet mongo-set --bind_ip_all   
+"""
+
+    mongodb_yml += f"""
+networks:
+  mongo-net:
+    driver: bridge
+"""
+    
+    DOCKER_COMPOSE_PATH = f"{DB}/docker-compose.yml"
+    with open(DOCKER_COMPOSE_PATH, "w") as f:
+        f.write(mongodb_yml)
 
 def generate_workload():
     if DB == "redis":
@@ -118,7 +139,19 @@ redis.port=6379
         f.write(workloadData)
 
 def generate_mongodb_workload():
-    pass
+    global WORKLOAD_PATH
+    workloadData = None
+    with open(f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}", "r") as f:
+        workloadData = f.read()
+
+    workloadData += f"""
+readproportion={READ_RATIO}
+updateproportion={WRITE_RATIO}
+mongodb.url=mongodb://localhost:27017/ycsb?w=2&replicaSet=mongo-set
+"""
+    WORKLOAD_PATH = f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}"
+    with open(WORKLOAD_PATH, "w") as f:
+        f.write(workloadData)
 
 def run_docker_compose():
     subprocess.run(["sudo", "docker-compose", "-f", f"{DB}/docker-compose.yml", "up", "-d"])
@@ -143,7 +176,7 @@ def parse_result(file_path: str):
 
 def calculate_stats():
     result = parse_result(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_RUN_COMMAND}-0.txt")
-    print(result)
+    # print(result)
     pass
 
 def handle_redis_workload():
