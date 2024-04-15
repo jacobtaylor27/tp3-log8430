@@ -46,12 +46,17 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
+    clean_directories()
     generate_docker_compose()
     generate_workload()
     run_docker_compose()
     handle_workload()
 
     return 0
+
+def clean_directories():
+    subprocess.run(["sudo", "rm", "-rf", f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-*"])
+    subprocess.run(["sudo", "rm", "-rf", f"{RESULTS_PATH}"])
 
 def generate_docker_compose():
     global DB
