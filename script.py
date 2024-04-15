@@ -55,8 +55,9 @@ def main():
         generate_docker_compose()
         generate_workload()
         run_docker_compose()
-
-    handle_workload()
+    
+    if handle_workload_bool == 1: 
+        handle_workload()
 
     return 0
 
