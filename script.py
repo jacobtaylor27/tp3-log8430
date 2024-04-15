@@ -51,10 +51,10 @@ def main():
     generate_workload()
     run_docker_compose()
     
-    if DB == "mongodb":
-        setup_replica_set()
+    # if DB == "mongodb":
+    #     setup_replica_set()
 
-    # handle_workload()
+    handle_workload()
 
     return 0
 
@@ -218,7 +218,11 @@ def clean_mongodb():
 def setup_replica_set():
     nodes = []
     for i in range(1, NODE_COUNT + 1):
-        nodes.append({"_id": i - 1, "host": f"mongo{i}"})
+        obj = {
+            "_id": i - 1,
+            "host": f"mongo{i}"
+        }
+        # nodes.append({_id: i - 1, host: f"mongo{i}"})
     
     rs_command = f"rs.initiate({{ _id: \"rs0\", members: {nodes} }})"
     print(rs_command)
