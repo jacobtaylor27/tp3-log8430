@@ -126,16 +126,12 @@ def handle_workload():
 
 def handle_redis_workload():
     for i in range(ITERATION_COUNT):
-        stdout = ycsb_runner(YCSB_LOAD_COMMAND)
-        with open(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_LOAD_COMMAND}-{i}.txt", "w") as f:
-            f.write(stdout)
+        ycsb_runner(YCSB_LOAD_COMMAND, i)
+        ycsb_runner(YCSB_RUN_COMMAND, i)
+        
 
-        stdout = ycsb_runner(YCSB_RUN_COMMAND)
-        with open(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_RUN_COMMAND}-{i}.txt", "w") as f:
-            f.write(stdout)
-
-def ycsb_runner(command_type: str) -> str:
-    return subprocess.run([
+def ycsb_runner(command_type: str, iteration: int):
+    stdout = subprocess.run([
         YCSB_BIN_PATH,
         command_type,
         DB,
@@ -143,6 +139,12 @@ def ycsb_runner(command_type: str) -> str:
         "-P",
         WORKLOAD_PATH,
     ], capture_output=True).stdout.decode("utf-8")
+
+    file_path = f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{command_type}-{iteration}.txt"
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    with open(file_path, "w") as f:
+        f.write(stdout)
 
 def handle_mongodb_workload():
     pass
