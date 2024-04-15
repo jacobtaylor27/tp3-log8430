@@ -135,6 +135,7 @@ def parse_result(file_path: str):
     result = {}
     with open(file_path, 'r') as file:
         for line in file:
+            print(line.split())
             if (line.startswith("[")):
                 parts = line.strip().split(',')
                 result[parts[0]] = parts[1] + parts[2]
