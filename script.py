@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+from pymongo import MongoClient
 
 ITERATION_COUNT = 1
 WORKLOADS_PATH = "workloads"
@@ -46,10 +47,14 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
-    # clean_directories()
+    clean_directories()
     generate_docker_compose()
     generate_workload()
-    # run_docker_compose()
+    run_docker_compose()
+    
+    if DB == "mongodb":
+        setup_replica_set()
+
     # handle_workload()
 
     return 0
@@ -204,6 +209,12 @@ def ycsb_runner(command_type: str, iteration: int):
 
     with open(file_path, "w") as f:
         f.write(stdout)
+
+def setup_replica_set():
+    mongo_uri = "mongodb://localhost:27017"
+    repl_set_name = "rs0"
+
+    client = MongoClient(mongo_uri)
 
 def handle_mongodb_workload():
     pass
