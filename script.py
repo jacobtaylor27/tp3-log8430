@@ -128,14 +128,16 @@ def handle_redis_workload():
         ycsb_runner("run", i)
 
 def ycsb_runner(command_type: str, iteration: int):
-    subprocess.run([
+    result = subprocess.run([
         YCSB_BIN_PATH,
         command_type,
         DB,
         "-s",
         "-P",
         WORKLOAD_PATH,
-    ])
+    ], capture_output=True)
+
+    print(result.stdout.decode("utf-8"))
 
 def handle_mongodb_workload():
     pass
