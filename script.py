@@ -135,12 +135,9 @@ def parse_result(file_path: str):
     result = {}
     with open(file_path, 'r') as file:
         for line in file:
-            print(line)
-            parts = line.strip().split(',')
-            if len(parts) >= 3:
-                key = ','.join(parts[:-2]).strip()
-                value = ','.join(parts[-2:]).strip()
-                result[key] = value
+            if (line.startswith("[")):
+                parts = line.strip().split(',')
+                result[parts[0]] = parts[1] + parts[2]
     return result
 
 def calculate_stats():
