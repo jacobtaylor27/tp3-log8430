@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-ITERATION_COUNT = 1
+ITERATION_COUNT = 10
 WORKLOADS_PATH = "workloads"
 RESULTS_PATH = "results"
 DOCKER_COMPOSE_TEMPLATE_FILENAME = "docker-compose-template.yml"
