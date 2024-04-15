@@ -7,7 +7,7 @@ WORKLOADS_PATH = "workloads"
 RESULTS_PATH = "results"
 DOCKER_COMPOSE_TEMPLATE_FILENAME = "docker-compose-template.yml"
 WORKLOAD_DEFAULT_CONFIG = "workload"
-YCSB_BIN_PATH = "ycsb-0.17.0/bin/ycsb.sh"
+YCSB_BIN_PATH = "../ycsb-0.17.0/bin/ycsb.sh"
 
 NODE_COUNT = 0
 READ_RATIO = 0
