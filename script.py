@@ -134,8 +134,6 @@ def ycsb_runner(command_type: str, iteration: int):
         DB,
         "-s",
         WORKLOAD_PATH,
-        ">",
-        f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/output-{iteration}-{command_type}-{READ_RATIO * 100}-{WRITE_RATIO * 100}.txt"
     ])
 
 def handle_mongodb_workload():
