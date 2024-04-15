@@ -20,7 +20,7 @@ DOCKER_COMPOSE_PATH = ""
 WORKLOAD_PATH = ""
 
 def main():
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 6:
         print("Usage: python script.py <db> <node_count> <workload-read-ratio> <workload-write-ratio")
         return 1
 
@@ -46,21 +46,19 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
-    # clean_directories()
-    generate_docker_compose()
-    generate_workload()
-    run_docker_compose()
+    handle_workload_bool = int(sys.argv[5])
+    if handle_workload < 0 or handle_workload > 1:
+        print("Invalid handle workload. Please use 0 or 1")
+        return 1
     
-    # if DB == "mongodb":
-    #     setup_replica_set()
+    if handle_workload_bool == 0:
+        generate_docker_compose()
+        generate_workload()
+        run_docker_compose()
 
     handle_workload()
 
     return 0
-
-def clean_directories():
-    subprocess.run(["sudo", "rm", "-rf", f"{WORKLOADS_PATH}/{WORKLOAD_DEFAULT_CONFIG}-*"])
-    subprocess.run(["sudo", "rm", "-rf", f"{RESULTS_PATH}"])
 
 def generate_docker_compose():
     global DB
@@ -166,28 +164,11 @@ def handle_workload():
         handle_redis_workload()
     elif DB == "mongodb":
         handle_mongodb_workload()
-    
-    calculate_stats()
-
-def parse_result(file_path: str):
-    result = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            print(line.split())
-            if (line.startswith("[")):
-                parts = line.strip().split(',')
-                result[parts[0]] = parts[1] + parts[2]
-    return result
-
-def calculate_stats():
-    result = parse_result(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_RUN_COMMAND}-0.txt")
-    # print(result)
-    pass
 
 def handle_redis_workload():
+    ycsb_runner(YCSB_LOAD_COMMAND, i)
     for i in range(ITERATION_COUNT):
         print(f"Running iteration {i}...")
-        ycsb_runner(YCSB_LOAD_COMMAND, i)
         ycsb_runner(YCSB_RUN_COMMAND, i)
     
     print("Done running all iterations!")
@@ -209,27 +190,13 @@ def ycsb_runner(command_type: str, iteration: int):
     with open(file_path, "w") as f:
         f.write(stdout)
 
-def clean_mongodb():
-    use_db_command = "use ycsb"
-    command = "db.dropDatabase()"
-    subprocess.run(["sudo", "docker", "exec", "-it", "mongo1", "mongo", "--eval", use_db_command])
-    subprocess.run(["sudo", "docker", "exec", "-it", "mongo1", "mongo", "--eval", command])
-
-def setup_replica_set():
-    nodes = []
-    for i in range(1, NODE_COUNT + 1):
-        obj = {
-            "_id": i - 1,
-            "host": f"mongo{i}"
-        }
-        # nodes.append({_id: i - 1, host: f"mongo{i}"})
-    
-    rs_command = f"rs.initiate({{ _id: \"rs0\", members: {nodes} }})"
-    print(rs_command)
-    subprocess.run(["sudo", "docker", "exec", "-it", "mongo1", "mongo", "--eval", f"\"{rs_command}\""])
-
 def handle_mongodb_workload():
-    pass
+    ycsb_runner(YCSB_LOAD_COMMAND, i)
+    for i in range(ITERATION_COUNT):
+        print(f"Running iteration {i}...")
+        ycsb_runner(YCSB_RUN_COMMAND, i)
+    
+    print("Done running all iterations!")
 
 if __name__ == '__main__':
     main()
