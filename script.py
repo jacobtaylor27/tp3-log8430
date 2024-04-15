@@ -114,7 +114,6 @@ def generate_mongodb_workload():
     pass
 
 def run_docker_compose():
-    print(DB)
     subprocess.run(["sudo", "docker-compose", "-f", f"{DB}/docker-compose.yml", "up", "-d"])
 
 def handle_workload():
@@ -134,7 +133,6 @@ def ycsb_runner(command_type: str, iteration: int):
         command_type,
         DB,
         "-s",
-        "-P",
         WORKLOAD_PATH,
         ">",
         f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/output-{iteration}-{command_type}-{READ_RATIO * 100}-{WRITE_RATIO * 100}.txt"
