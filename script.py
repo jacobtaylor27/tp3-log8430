@@ -131,14 +131,15 @@ def handle_workload():
     
     calculate_stats()
 
-def parse_result(filename: str):
+def parse_result(file_path: str):
     result = {}
-    with open(filename, 'r') as f:
-        for line in f:
+    with open(file_path, 'r') as file:
+        for line in file:
             parts = line.strip().split(',')
-            if len(parts) == 3:
-                key, _, value = parts
-                result[key.strip()] = value.strip()
+            if len(parts) >= 3:
+                key = ','.join(parts[:-2]).strip()
+                value = ','.join(parts[-2:]).strip()
+                result[key] = value
     return result
 
 def calculate_stats():
