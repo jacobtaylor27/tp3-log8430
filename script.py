@@ -103,7 +103,7 @@ def generate_mongodb_docker_compose():
     container_name: mongo-slave{i}
     depends_on:
       - mongo-master
-    command: mongod --replSet mongo-set --bind_ip_all
+    command: --replSet mongo-set --bind_ip_all
     networks:
       - mongo-net
 """
