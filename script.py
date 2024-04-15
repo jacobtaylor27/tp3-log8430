@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-ITERATION_COUNT = 10
+ITERATION_COUNT = 1
 WORKLOADS_PATH = "workloads"
 RESULTS_PATH = "results"
 DOCKER_COMPOSE_TEMPLATE_FILENAME = "docker-compose-template.yml"
@@ -123,6 +123,23 @@ def handle_workload():
         handle_redis_workload()
     elif DB == "mongodb":
         handle_mongodb_workload()
+    
+    calculate_stats()
+
+def parse_result(filename: str):
+    result = {}
+    with open(filename, 'r') as f:
+        for line in f:
+            parts = line.strip().split(',')
+            if len(parts) == 3:
+                key, _, value = parts
+                result[key.strip()] = value.strip()
+    return result
+
+def calculate_stats():
+    result = parse_result(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_RUN_COMMAND}-0.txt")
+    print(result)
+    pass
 
 def handle_redis_workload():
     for i in range(ITERATION_COUNT):
