@@ -8,6 +8,8 @@ RESULTS_PATH = "results"
 DOCKER_COMPOSE_TEMPLATE_FILENAME = "docker-compose-template.yml"
 WORKLOAD_DEFAULT_CONFIG = "workload"
 YCSB_BIN_PATH = "../ycsb-0.17.0/bin/ycsb.sh"
+YCSB_RUN_COMMAND = "run"
+YCSB_LOAD_COMMAND = "load"
 
 NODE_COUNT = 0
 READ_RATIO = 0
@@ -124,20 +126,23 @@ def handle_workload():
 
 def handle_redis_workload():
     for i in range(ITERATION_COUNT):
-        ycsb_runner("load", i)
-        ycsb_runner("run", i)
+        stdout = ycsb_runner(YCSB_LOAD_COMMAND)
+        with open(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_LOAD_COMMAND}-{i}.txt", "w") as f:
+            f.write(stdout)
 
-def ycsb_runner(command_type: str, iteration: int):
-    result = subprocess.run([
+        stdout = ycsb_runner(YCSB_RUN_COMMAND)
+        with open(f"{RESULTS_PATH}/{DB}/{NODE_COUNT}/{(READ_RATIO * 100):.0f}-{(WRITE_RATIO * 100):.0f}/{YCSB_RUN_COMMAND}-{i}.txt", "w") as f:
+            f.write(stdout)
+
+def ycsb_runner(command_type: str) -> str:
+    return subprocess.run([
         YCSB_BIN_PATH,
         command_type,
         DB,
         "-s",
         "-P",
         WORKLOAD_PATH,
-    ], capture_output=True)
-
-    print(result.stdout.decode("utf-8"))
+    ], capture_output=True).stdout.decode("utf-8")
 
 def handle_mongodb_workload():
     pass
