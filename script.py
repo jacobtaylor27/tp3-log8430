@@ -161,7 +161,6 @@ def ycsb_runner(command_type: str, iteration: int):
         YCSB_BIN_PATH,
         command_type,
         DB,
-        "-s",
         "-P",
         WORKLOAD_PATH,
     ], capture_output=True).stdout.decode("utf-8")
