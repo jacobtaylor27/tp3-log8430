@@ -220,7 +220,8 @@ def setup_replica_set():
     for i in range(1, NODE_COUNT + 1):
         nodes.append({"_id": i - 1, "host": f"mongo{i}"})
     
-    rs_command = f"rs.initiate({{ _id: \"rs0\", members: {nodes} }})" 
+    rs_command = f"rs.initiate({{ _id: \"rs0\", members: {nodes} }})"
+    print(rs_command)
     subprocess.run(["sudo", "docker", "exec", "-it", "mongo1", "mongo", "--eval", f"\"{rs_command}\""])
 
 def handle_mongodb_workload():
