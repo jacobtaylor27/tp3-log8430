@@ -110,6 +110,7 @@ def generate_mongodb_workload():
     pass
 
 def run_docker_compose():
+    print(DB)
     subprocess.run(["sudo", "docker-compose", "-f", f"{DB}/docker-compose.yml", "up", "-d"])
 
 def handle_workload():
