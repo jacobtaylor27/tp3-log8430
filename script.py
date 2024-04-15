@@ -46,7 +46,7 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
-    clean_directories()
+    # clean_directories()
     generate_docker_compose()
     generate_workload()
     run_docker_compose()
