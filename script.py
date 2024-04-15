@@ -167,7 +167,7 @@ def handle_workload():
         handle_mongodb_workload()
 
 def handle_redis_workload():
-    ycsb_runner(YCSB_LOAD_COMMAND, i)
+    ycsb_runner(YCSB_LOAD_COMMAND, 0)
     for i in range(ITERATION_COUNT):
         print(f"Running iteration {i}...")
         ycsb_runner(YCSB_RUN_COMMAND, i)
