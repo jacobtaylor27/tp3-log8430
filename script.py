@@ -126,8 +126,11 @@ def handle_workload():
 
 def handle_redis_workload():
     for i in range(ITERATION_COUNT):
+        print(f"Running iteration {i}...")
         ycsb_runner(YCSB_LOAD_COMMAND, i)
         ycsb_runner(YCSB_RUN_COMMAND, i)
+    
+    print("Done running all iterations!")
         
 
 def ycsb_runner(command_type: str, iteration: int):
