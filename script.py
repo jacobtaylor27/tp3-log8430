@@ -47,7 +47,7 @@ def main():
         return 1
     
     handle_workload_bool = int(sys.argv[5])
-    if handle_workload < 0 or handle_workload > 1:
+    if handle_workload_bool < 0 or handle_workload_bool > 1:
         print("Invalid handle workload. Please use 0 or 1")
         return 1
     
