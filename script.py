@@ -3,7 +3,7 @@ import sys
 import subprocess
 from pymongo import MongoClient
 
-ITERATION_COUNT = 1
+ITERATION_COUNT = 10
 WORKLOADS_PATH = "workloads"
 RESULTS_PATH = "results"
 DOCKER_COMPOSE_TEMPLATE_FILENAME = "docker-compose-template.yml"
@@ -47,7 +47,7 @@ def main():
         print("Invalid write ratio. Please use a float between 0 and 1")
         return 1
     
-    # clean_directories()
+    clean_directories()
     generate_docker_compose()
     generate_workload()
     run_docker_compose()
@@ -55,7 +55,7 @@ def main():
     if DB == "mongodb":
         setup_replica_set()
 
-    # handle_workload()
+    handle_workload()
 
     return 0
 
@@ -213,15 +213,11 @@ def ycsb_runner(command_type: str, iteration: int):
 def setup_replica_set():
     mongo_uri = "mongodb://localhost:27017"
     repl_set_name = "rs0"
-
-    client = MongoClient(mongo_uri)
-    nodes = []
-
+    
+    members = []
     for i in range(0, NODE_COUNT):
-        nodes.append({"_id": i, "host": f"mongo{i}:27017"})
+        members.append({"_id": i, "host": f"mongo{i}:27017"})
 
-    result = client.admin.command("replSetInitiate", {"_id": repl_set_name, "members": nodes})
-    print(result)
     print("Replica set initiated")
 
 def handle_mongodb_workload():
