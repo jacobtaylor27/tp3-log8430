@@ -192,7 +192,7 @@ def ycsb_runner(command_type: str, iteration: int):
         f.write(stdout)
 
 def handle_mongodb_workload():
-    ycsb_runner(YCSB_LOAD_COMMAND, i)
+    ycsb_runner(YCSB_LOAD_COMMAND, 0)
     for i in range(ITERATION_COUNT):
         print(f"Running iteration {i}...")
         ycsb_runner(YCSB_RUN_COMMAND, i)
