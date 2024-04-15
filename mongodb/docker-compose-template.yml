@@ -4,6 +4,6 @@ services:
     container_name: mongo-master
     ports:
       - "27017:27017"
-    command: mongod --replSet mongo-set --bind_ip_all
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     networks:
       - mongo-net

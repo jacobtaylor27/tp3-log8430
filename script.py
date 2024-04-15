@@ -101,9 +101,9 @@ def generate_mongodb_docker_compose():
   mongo-slave{i}:
     image: mongo:4.4
     container_name: mongo-slave{i}
-    depends_on:
-      - mongo-master
-    command: --replSet mongo-set --bind_ip_all
+    ports:
+      - "2701{7 + i}:27017"
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     networks:
       - mongo-net
 """
